@@ -50,13 +50,25 @@ func Login(c *gin.Context) {
 	}
 	// create token
 	token, err := utils.GenerateToken(username, password, time.Hour*24*10, true)
-	token2, err := utils.GenerateToken(username, password, time.Hour*24*30, true)
+	//token2, err := utils.GenerateToken(username, password, time.Hour*24*30, true)
 	if err != nil {
 		fmt.Println(err.Error())
 		response.JSONResponse(http.StatusInternalServerError, code.ERROR_AUTH_TOKEN, nil)
 		return
 	}
-	c.SetCookie("token", token, 0, "/", "localhost", false, true)
-	c.SetCookie("token2", token2, 0, "/", "localhost", false, true)
-	response.JSONResponse(http.StatusOK, code.SUCCESS, nil)
+	//c.SetCookie("token", token, 0, "/", "localhost", false, true)
+	//c.SetCookie("token2", token2, 0, "/", "localhost", false, true)
+	response.JSONResponse(http.StatusOK, code.SUCCESS, map[string]string{
+		"token": token,
+	})
+}
+
+func GetInfo(c *gin.Context) {
+	token := c.Query("token")
+	fmt.Println(token)
+	response := app.Response{C: c}
+
+	response.JSONResponse(http.StatusOK, code.SUCCESS, map[string]string{
+		"token": token,
+	})
 }
